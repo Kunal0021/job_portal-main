@@ -1,0 +1,6 @@
+{
+  "full_name": "Check User",
+  "email": "check@example.com",
+  "subject": "Table Verification",
+  "message": "Testing the backend table existence."
+}
