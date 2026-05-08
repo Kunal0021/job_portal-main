@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { 
   Search, 
@@ -14,10 +14,26 @@ import {
   HelpCircle,
   Mail,
   Globe,
-  Star
+  Star,
+  MapPin,
+  ArrowRight,
+  ChevronDown
 } from 'lucide-react';
 import { Button, Input } from '@/components/ui';
 import { cn } from '@/lib/utils';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  ChevronRight, 
+  Code, 
+  Palette, 
+  BarChart, 
+  Users, 
+  Database, 
+  Clock, 
+  Home, 
+  Zap, 
+  FileText 
+} from 'lucide-react';
 
 import { Banner } from '@/components/Banner';
 
@@ -52,6 +68,29 @@ export default function UserLayout({ children }: { children: React.ReactNode }) 
     { name: 'Contact', href: '/contact' },
   ];
 
+  const [findJobsHover, setFindJobsHover] = useState(false);
+
+  const categories = [
+    { name: 'Engineering', icon: Code, href: '/jobs?category=Engineering', desc: 'Software, infrastructure & systems' },
+    { name: 'Design', icon: Palette, href: '/jobs?category=Design', desc: 'UI/UX, product & visual design' },
+    { name: 'Marketing', icon: BarChart, href: '/jobs?category=Marketing', desc: 'Growth, SEO & digital marketing' },
+    { name: 'Sales', icon: Users, href: '/jobs?category=Sales', desc: 'Account management & business dev' },
+    { name: 'Data Science', icon: Database, href: '/jobs?category=Data Science', desc: 'Analytics, ML & data engineering' },
+  ];
+
+  const jobTypes = [
+    { name: 'Full-time', icon: Briefcase, href: '/jobs?job_type=Full-time' },
+    { name: 'Remote', icon: Globe, href: '/jobs?job_type=Remote' },
+    { name: 'Internship', icon: Zap, href: '/jobs?job_type=Internship' },
+    { name: 'Contract', icon: FileText, href: '/jobs?job_type=Contract' },
+  ];
+
+  const locations = [
+    { name: 'India', href: '/jobs?location=India' },
+    { name: 'Remote', href: '/jobs?location=Remote' },
+    { name: 'Global', href: '/jobs?location=Global' },
+  ];
+
   return (
     <div className="min-h-screen bg-white flex flex-col">
       {/* Navigation */}
@@ -67,13 +106,94 @@ export default function UserLayout({ children }: { children: React.ReactNode }) 
               
               <div className="hidden lg:flex items-center gap-8">
                 {navigation.map((item) => (
-                  <Link 
-                    key={item.href} 
-                    href={item.href}
-                    className="text-sm font-bold text-gray-500 hover:text-primary transition-all relative after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-primary after:transition-all hover:after:w-full"
-                  >
-                    {item.name}
-                  </Link>
+                  item.name === 'Find Jobs' ? (
+                    <div 
+                      key={item.href}
+                      className="relative h-20 flex items-center"
+                      onMouseEnter={() => setFindJobsHover(true)}
+                      onMouseLeave={() => setFindJobsHover(false)}
+                    >
+                      <Link 
+                        href={item.href}
+                        className="text-sm font-bold text-gray-500 hover:text-primary transition-all relative after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-primary after:transition-all hover:after:w-full flex items-center gap-1"
+                      >
+                        {item.name}
+                        <ChevronDown className={cn("w-3 h-3 transition-transform duration-300", findJobsHover ? "rotate-180 text-primary" : "")} />
+                      </Link>
+
+                      <AnimatePresence>
+                        {findJobsHover && (
+                          <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 10 }}
+                            transition={{ duration: 0.2 }}
+                            className="absolute top-full left-0 w-[450px] bg-white rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.08)] border border-gray-100 flex overflow-hidden z-[100] mt-2"
+                          >
+                            {/* Left Column: Job Types */}
+                            <div className="w-1/2 p-4 space-y-1">
+                              <Link href="/jobs" className="block px-3 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
+                                Jobs For You
+                              </Link>
+                              <Link href="/jobs?job_type=Remote" className="block px-3 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
+                                Work From Home Jobs
+                              </Link>
+                              <Link href="/jobs?job_type=Part-time" className="block px-3 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
+                                Part Time Jobs
+                              </Link>
+                              <Link href="/jobs" className="block px-3 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
+                                Freshers Jobs
+                              </Link>
+                              <Link href="/jobs" className="block px-3 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
+                                Women Jobs
+                              </Link>
+                              <Link href="/jobs?job_type=Full-time" className="block px-3 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
+                                Full Time Jobs
+                              </Link>
+                              <Link href="/jobs" className="block px-3 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
+                                Night Shift Jobs
+                              </Link>
+                              <Link href="/jobs" className="block px-3 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
+                                International Jobs
+                              </Link>
+                            </div>
+
+                            {/* Right Column: Grouped Searches */}
+                            <div className="w-1/2 p-4 bg-white border-l border-gray-50 space-y-1">
+                              <Link href="/jobs" className="flex items-center justify-between px-3 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors group">
+                                Jobs By City
+                                <ChevronRight className="w-3.5 h-3.5 text-emerald-500 transition-colors" />
+                              </Link>
+                              <Link href="/jobs" className="flex items-center justify-between px-3 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors group">
+                                Jobs By Department
+                                <ChevronRight className="w-3.5 h-3.5 text-emerald-500 transition-colors" />
+                              </Link>
+                              <Link href="/jobs" className="flex items-center justify-between px-3 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors group">
+                                Jobs By Company
+                                <ChevronRight className="w-3.5 h-3.5 text-emerald-500 transition-colors" />
+                              </Link>
+                              <Link href="/jobs" className="flex items-center justify-between px-3 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors group">
+                                Jobs By Qualification
+                                <ChevronRight className="w-3.5 h-3.5 text-emerald-500 transition-colors" />
+                              </Link>
+                              <Link href="/jobs" className="flex items-center justify-between px-3 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors group">
+                                Others
+                                <ChevronRight className="w-3.5 h-3.5 text-emerald-500 transition-colors" />
+                              </Link>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  ) : (
+                    <Link 
+                      key={item.href} 
+                      href={item.href}
+                      className="text-sm font-bold text-gray-500 hover:text-primary transition-all relative after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-primary after:transition-all hover:after:w-full"
+                    >
+                      {item.name}
+                    </Link>
+                  )
                 ))}
               </div>
             </div>
@@ -176,7 +296,13 @@ export default function UserLayout({ children }: { children: React.ReactNode }) 
 
       {/* Main Content */}
       <main className="flex-grow">
-        {children}
+        <Suspense fallback={
+          <div className="flex items-center justify-center min-h-[50vh]">
+            <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        }>
+          {children}
+        </Suspense>
       </main>
 
       {/* Footer Redesign */}

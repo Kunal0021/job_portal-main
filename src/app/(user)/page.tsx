@@ -28,6 +28,7 @@ import { supabase } from '@/lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FilterDropdown } from '@/components/FilterDropdown';
 import { cn } from '@/lib/utils';
+import { LogoMarquee } from '@/components/LogoMarquee';
 
 const categories = [
   { icon: Code, name: 'Engineering', count: '1,234 Jobs', color: 'bg-blue-50 text-blue-600 border-blue-100' },
@@ -38,18 +39,6 @@ const categories = [
   // { icon: Globe, name: 'Remote', count: '2,450 Jobs', color: 'bg-teal-50 text-teal-600 border-teal-100' },
 ];
 
-const BRANDS = [
-  { name: 'Google', color: 'hover:text-[#4285F4]' },
-  { name: 'Infosys', color: 'hover:text-[#007CC3]' },
-  { name: 'Meta', color: 'hover:text-[#0668E1]' },
-  { name: 'Apple', color: 'hover:text-[#555555]' },
-  { name: 'Stripe', color: 'hover:text-[#635BFF]' },
-  { name: 'Microsoft', color: 'hover:text-[#F25022]' },
-  { name: 'Amazon', color: 'hover:text-[#FF9900]' },
-  { name: 'Netflix', color: 'hover:text-[#E50914]' },
-  { name: 'Tesla', color: 'hover:text-[#E82127]' },
-  { name: 'IBM', color: 'hover:text-[#052D84]' }
-];
 
 const FILTER_OPTIONS = {
   category: ['Engineering', 'Design', 'Marketing', 'Product', 'Sales', 'Customer Support'],
@@ -315,6 +304,9 @@ export default function HomePage() {
             </div>
         </div>
       </section>
+
+      {/* Logo Marquee */}
+      <LogoMarquee />
 
       {/* Categories */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">

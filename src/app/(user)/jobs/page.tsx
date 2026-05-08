@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { Card, Badge, Button, Input } from '@/components/ui';
 import { 
   Search, 
@@ -45,7 +46,8 @@ const filterCategories = [
 
 import { ApplyButton } from '@/components/ApplyButton';
 
-export default function JobListingPage() {
+function JobListingContent() {
+  const searchParams = useSearchParams();
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
@@ -101,6 +103,21 @@ export default function JobListingPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const category = searchParams.get('category');
+    const job_type = searchParams.get('job_type');
+    const location = searchParams.get('location');
+
+    if (category || job_type || location) {
+      setSelectedFilters(prev => ({
+        ...prev,
+        category: category ? [category] : prev.category,
+        job_type: job_type ? [job_type] : prev.job_type,
+      }));
+      if (location) setLocationQuery(location);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     fetchJobs();
@@ -320,6 +337,18 @@ export default function JobListingPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function JobListingPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    }>
+      <JobListingContent />
+    </Suspense>
   );
 }
 
